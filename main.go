@@ -9,6 +9,7 @@ import (
 
 	sarama "github.com/Shopify/sarama"
 	gen "github.com/brianvoe/gofakeit/v5"
+	"github.com/google/uuid"
 	flags "github.com/jessevdk/go-flags"
 )
 
@@ -50,7 +51,10 @@ func main() {
 		data, err := generateData()
 		failOnError(err, "Failed to generate data")
 
+		key, _ := uuid.NewUUID()
+
 		partition, offset, err := syncProducer.SendMessage(&sarama.ProducerMessage{
+			Key:   sarama.ByteEncoder(key.String()),
 			Topic: topic,
 			Value: sarama.ByteEncoder(data),
 		})
