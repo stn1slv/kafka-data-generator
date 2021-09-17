@@ -14,10 +14,11 @@ import (
 )
 
 var opts struct {
-	Count    int    `short:"c" long:"count" env:"COUNT" default:"100" description:"count of records"`
-	Topic    string `short:"t" long:"topic" env:"QUEUE" default:"output" description:"name of the topic"`
-	Hostname string `short:"h" long:"host" env:"HOSTNAME" default:"localhost" description:"hostname of Kafka brocker"`
-	Port     int    `short:"p" long:"port" env:"PORT" default:"9092" description:"port of Kafka brocker"`
+	Count      int    `short:"c" long:"count" env:"COUNT" default:"100" description:"count of records"`
+	Topic      string `short:"t" long:"topic" env:"QUEUE" default:"output" description:"name of the topic"`
+	Hostname   string `short:"h" long:"host" env:"HOSTNAME" default:"localhost" description:"hostname of Kafka brocker"`
+	Port       int    `short:"p" long:"port" env:"PORT" default:"9092" description:"port of Kafka brocker"`
+	SilentMode string `short:"s" long:"silent" env:"SILENT" default:"false" description:"Silent mode"`
 }
 
 func failOnError(err error, msg string) {
@@ -60,8 +61,10 @@ func main() {
 		})
 		failOnError(err, "Failed to send message")
 
-		// log.Printf("KAFKA: wrote message [%s] at partition: %d, offset: %d\n", string(data), partition, offset)
-		log.Printf("KAFKA: wrote message at partition: %d, offset: %d\n", partition, offset)
+		if opts.SilentMode == "false" {
+			log.Printf("Wrote message at partition: %d, offset: %d\n", partition, offset)
+		}
+
 	}
 
 }
