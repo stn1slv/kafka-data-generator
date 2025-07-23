@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"math/rand"
 	"os"
+	"time"
 
 	sarama "github.com/Shopify/sarama"
 	gen "github.com/brianvoe/gofakeit/v5"
@@ -30,6 +30,8 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
+	gen.Seed(time.Now().UnixNano())
 
 	brokerList := []string{opts.Broker}
 	topic := opts.Topic
@@ -68,7 +70,6 @@ func main() {
 }
 
 func generateData() ([]byte, error) {
-	gen.Seed(rand.Int63())
 
 	var value, err = gen.JSON(&gen.JSONOptions{
 		Type: "object",
